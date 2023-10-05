@@ -4,12 +4,22 @@ const app = express();
 const todoController = require("./controller/todo.controller");
 const blogController = require("./controller/blog.controller");
 
+// Middleware untuk menguraikan permintaan JSON
 app.use(express.json());
-app.use(todoController);
-app.use(blogController);
 
+// Menggunakan controller
+app.use("/todos", todoController);
+app.use("/blogs", blogController);
+
+// Rute root ("/") untuk memberikan pesan sederhana
 app.get("/", (req, res) => {
-  res.send("<h1>Server telah berjalan</h1>");
+  res.send("Server is running");
+});
+
+// Penanganan kesalahan umum
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: "Internal Server Error" });
 });
 
 app.listen(PORT, () => {
